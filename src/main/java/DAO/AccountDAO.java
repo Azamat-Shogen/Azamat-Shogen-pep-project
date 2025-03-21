@@ -9,24 +9,27 @@ import Model.Account;
 import Util.ConnectionUtil;
 import Validations.AccountValidations;
 
+
+/**
+ * DAO class for managing account-related database operations.
+ */
 public class AccountDAO {
     
-    AccountValidations validations;
-    /**
-     * Registers a new account
-     * @param account
-     * @return new account
+    AccountValidations validations = new AccountValidations();
+   
+   /**
+     * Registers a new account in the database.
+     * @param account The account to register.
+     * @return The created account with ID or {@code null} if registration fails.
      */
     public Account registerUser(Account account){
 
-        validations = new AccountValidations();
         Connection connection = ConnectionUtil.getConnection();
 
         try {
             // Run validation checks
-            if (!validations.registerValidations(account, connection)){
-                return null;
-            }
+            if (!validations.registerValidations(account, connection)) return null;
+
 
             String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
 
@@ -49,4 +52,39 @@ public class AccountDAO {
         }
         return null;
         } 
+
+    /**
+     * Authenticates a user by verifying their credentials.
+     * @param account The account to authenticate.
+     * @return The authenticated account or {@code null} if login fails.
+     */
+    public Account loginUser(Account account){
+
+        if (!validations.loginValidations(account)) return null;
+
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+            String sql = "SELECT * FROM account WHERE account.username = ? AND account.password = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                Account loggedInUser = new Account(
+                    rs.getInt("account_id"),
+                    rs.getString("username"),
+                    rs.getString("password")
+                );
+                return loggedInUser;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }
