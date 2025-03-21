@@ -1,11 +1,9 @@
 package Controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import Handlers.AccountHandler;
-import Model.Account;
+import Handlers.MessageHandler;
 import Service.AccountService;
+import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -22,11 +20,15 @@ public class SocialMediaController {
      */
 
     private final AccountService accountService;
+    private final MessageService messageService;
     private final AccountHandler accountHandler;
+    private final MessageHandler messageHandler;
 
     public SocialMediaController(){
          this.accountService = new AccountService();
+         this.messageService = new MessageService();
          this.accountHandler = new AccountHandler(accountService);
+         this.messageHandler = new MessageHandler(messageService);
     }
 
 
@@ -38,6 +40,7 @@ public class SocialMediaController {
         app.get("example-endpoint", this::exampleHandler);
         app.post("/register", accountHandler::registerHandler);
         app.post("/login", accountHandler::loginHandler);
+        app.post("/messages", messageHandler::postNewMessageHandler);
 
         return app;
     }

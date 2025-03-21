@@ -15,8 +15,8 @@ import Validations.AccountValidations;
  */
 public class AccountDAO {
     
-    AccountValidations validations = new AccountValidations();
-   
+    private final AccountValidations validations = new AccountValidations();
+    
    /**
      * Registers a new account in the database.
      * @param account The account to register.
@@ -49,6 +49,7 @@ public class AccountDAO {
    
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return null;
         }
         return null;
         } 
