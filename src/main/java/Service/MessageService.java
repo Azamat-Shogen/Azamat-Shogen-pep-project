@@ -35,5 +35,9 @@ public class MessageService {
     public List<Message> retrieveAllMessagesByUserId(int posted_by){
         return messageDAO.retrieveMessageByUserId(posted_by);
     }
+
+    public Message deleteMessageByMessageId(int message_id){
+        return messageDAO.deleteMessageByMessageId(message_id);
+    }
     
 }

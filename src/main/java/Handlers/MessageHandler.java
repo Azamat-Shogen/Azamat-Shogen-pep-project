@@ -69,7 +69,23 @@ public class MessageHandler {
     public void retrieveAllMessagesByUserIdHandler(Context ctx){
         int account_id = Integer.parseInt(ctx.pathParam("account_id"));
         List<Message> messages = messageService.retrieveAllMessagesByUserId(account_id);
-        ctx.json(messages);
+        ctx.status(200).json(messages);
+    }
+
+
+    /**
+     * Handles the request to delete a message by its ID.
+     * @param ctx The Javalin context containing the request and response.
+     */
+    public void deleteMessageByMessageIdHandler(Context ctx){
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message deletedMessage = messageService.deleteMessageByMessageId(message_id);
+        
+        if(deletedMessage != null){
+            ctx.status(200).json(deletedMessage);
+        }else {
+            ctx.status(200);
+        }
     }
     
 }

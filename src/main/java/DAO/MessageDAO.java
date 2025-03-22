@@ -141,4 +141,50 @@ public class MessageDAO {
         }
         return messages;
     }
+
+
+    /**
+     * Deletes a message by its ID and returns the deleted message.
+     * @param message_id The ID of the message to be deleted.
+     * @return The deleted message object, or null if no message was deleted.
+     */
+    public Message deleteMessageByMessageId(int message_id){
+        Connection connection = ConnectionUtil.getConnection();
+        Message deletedMessage = null;
+        try {
+            // First, retrieve the message to be deleted
+            String selectSql = "SELECT * FROM message WHERE message.message_id = ?";
+            PreparedStatement selectStatement = connection.prepareStatement(selectSql);
+            selectStatement.setInt(1, message_id);
+
+            ResultSet rs = selectStatement.executeQuery();
+            if(rs.next()){
+                // Create a message object to return
+                deletedMessage = new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch")
+                );
+            }
+
+            // Delete the message
+            if (deletedMessage != null){
+                String sql = "DELETE FROM message WHERE message.message_id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, message_id);
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if(affectedRows > 0){
+                    return deletedMessage;
+                } 
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
 }
