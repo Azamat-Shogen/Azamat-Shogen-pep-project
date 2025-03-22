@@ -33,4 +33,25 @@ public class MessageValidations {
 
         return true;
     }
+
+    public boolean updateMessageValidations(String messageText, int message_id, Connection connection){
+        if (messageText == null || messageText.isBlank()) return false;
+        if (messageText.length() > 255) return false;
+
+        try {
+            String sql = "SELECT * FROM message WHERE message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, message_id);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (!rs.next()) return false;
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -3,6 +3,7 @@ package Handlers;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Message;
@@ -37,7 +38,6 @@ public class MessageHandler {
         }
     }
 
-
     /**
      * Retrieves all messages and responds with a JSON list.
      * @param ctx The request context.
@@ -58,8 +58,7 @@ public class MessageHandler {
             ctx.status(200).json(message);
         } else {
             ctx.status(200);
-        }
-        
+        }   
     }
 
     /**
@@ -71,7 +70,6 @@ public class MessageHandler {
         List<Message> messages = messageService.retrieveAllMessagesByUserId(account_id);
         ctx.status(200).json(messages);
     }
-
 
     /**
      * Handles the request to delete a message by its ID.
@@ -85,6 +83,28 @@ public class MessageHandler {
             ctx.status(200).json(deletedMessage);
         }else {
             ctx.status(200);
+        }
+    }
+
+    /**
+     * Updates a message by its ID from the request path and body.
+     * @param ctx The Javalin `Context` object for the HTTP request and response.
+     * @throws JsonProcessingException If JSON processing fails.
+     * 
+     * Responds with the updated message in JSON (200 OK) or 400 on failure.
+     */
+    public void updateMessageByMessageIdHandler(Context ctx) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode requestNode = mapper.readTree(ctx.body());
+        
+        String messageText = requestNode.get("message_text").asText();
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+
+        Message updatedMessage = messageService.updateMessageByMessageId(messageText, message_id);
+        if(updatedMessage == null){
+            ctx.status(400);
+        }else {
+            ctx.status(200).json(mapper.writeValueAsString(updatedMessage));
         }
     }
     

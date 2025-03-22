@@ -15,8 +15,12 @@ public class MessageDAO {
 
     private final MessageValidations messageValidations = new MessageValidations();
 
+    /**
+     * Posts a new message to the database.
+     * @param message The Message object containing the message details.
+     * @return The newly created Message object with the generated ID if successful, or null if the insertion fails.
+     */
     public Message postNewMessage(Message message){
-
         Connection connection = ConnectionUtil.getConnection();
 
         try {
@@ -48,11 +52,10 @@ public class MessageDAO {
         return null;
     }
 
-
- /**
- * Retrieves all messages from the database.
- * @return A list of Message objects.
- */
+    /**
+     * Retrieves all messages from the database.
+     * @return A list of Message objects.
+     */
     public List<Message> retrieveAllMessages(){
         List<Message> messages = new ArrayList<>();
         Connection connection = ConnectionUtil.getConnection();
@@ -109,7 +112,6 @@ public class MessageDAO {
         return null;
     }
 
-
     /**
      * Retrieves messages by user ID.
      * @param posted_by The user's ID.
@@ -141,7 +143,6 @@ public class MessageDAO {
         }
         return messages;
     }
-
 
     /**
      * Deletes a message by its ID and returns the deleted message.
@@ -178,7 +179,51 @@ public class MessageDAO {
                 if(affectedRows > 0){
                     return deletedMessage;
                 } 
+            }
 
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
+     * Updates a message by its ID with the given text.
+     * @param messageText The new message text.
+     * @param message_id The ID of the message to update.
+     * @return The updated Message object if successful, or null if the update fails or no record is found.
+     */
+    public Message updateMessageByMessageId(String messageText, int message_id){
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+            // Run validation checks;
+            if (!messageValidations.updateMessageValidations(messageText, message_id, connection)) return null;
+
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            PreparedStatement selStatement = connection.prepareStatement(sql);
+
+            selStatement.setString(1, messageText);
+            selStatement.setInt(2, message_id);
+
+            int affectedRows = selStatement.executeUpdate();
+            
+            if (affectedRows > 0){
+                String selectSQL = "SELECT * FROM message WHERE message_id = ?";
+                PreparedStatement updatedStatement = connection.prepareStatement(selectSQL);
+                updatedStatement.setInt(1, message_id);
+
+                ResultSet rs = updatedStatement.executeQuery();
+                while (rs.next()) {
+                    Message message = new Message(
+                        rs.getInt("message_id"),
+                        rs.getInt("posted_by"),
+                        rs.getString("message_text"),
+                        rs.getLong("time_posted_epoch")
+                    );
+                    return message;
+                }
             }
 
         } catch (Exception e) {

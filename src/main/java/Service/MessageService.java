@@ -19,7 +19,6 @@ public class MessageService {
         this.messageDAO = messageDAO;
     }
 
-
     public Message postNewMessage(Message message){
         return messageDAO.postNewMessage(message);
     }
@@ -38,6 +37,10 @@ public class MessageService {
 
     public Message deleteMessageByMessageId(int message_id){
         return messageDAO.deleteMessageByMessageId(message_id);
+    }
+
+    public Message updateMessageByMessageId(String messageText, int message_id){
+        return messageDAO.updateMessageByMessageId(messageText, message_id);
     }
     
 }
