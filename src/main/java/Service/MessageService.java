@@ -28,8 +28,12 @@ public class MessageService {
         return messageDAO.retrieveAllMessages();
     }
 
-    public Message retrieveMessageById(int message_id){
-        return messageDAO.retrieveMessageById(message_id);
+    public Message retrieveMessageByMessageId(int message_id){
+        return messageDAO.retrieveMessageByMessageId(message_id);
+    }
+
+    public List<Message> retrieveAllMessagesByUserId(int posted_by){
+        return messageDAO.retrieveMessageByUserId(posted_by);
     }
     
 }

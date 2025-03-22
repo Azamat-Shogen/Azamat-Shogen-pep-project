@@ -84,7 +84,7 @@ public class MessageDAO {
     * @param message_id The ID of the message to retrieve.
     * @return The Message object if found, otherwise null.
     */
-    public Message retrieveMessageById(int message_id){
+    public Message retrieveMessageByMessageId(int message_id){
         Connection connection = ConnectionUtil.getConnection();
 
         try {
@@ -107,5 +107,38 @@ public class MessageDAO {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+
+    /**
+     * Retrieves messages by user ID.
+     * @param posted_by The user's ID.
+     * @return A list of messages or an empty list if none are found.
+     */
+    public List<Message> retrieveMessageByUserId(int posted_by){
+
+        List<Message> messages = new ArrayList<>();
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+            String sql = "SELECT * FROM message WHERE message.posted_by = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, posted_by);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Message message = new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch")
+                );
+                messages.add(message);
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return messages;
     }
 }

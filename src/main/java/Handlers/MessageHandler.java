@@ -19,11 +19,11 @@ public class MessageHandler {
         this.messageService = messageService;
     }
 
- /**
- * Handles the request to post a new message.
- * @param ctx The Javalin context containing the request body and response.
- * @throws JsonProcessingException If an error occurs while parsing or serializing JSON.
- */
+    /**
+     * Handles posting a new message.
+     * @param ctx The request context.
+     * @throws JsonProcessingException If JSON parsing fails.
+     */
     public void postNewMessageHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
@@ -53,25 +53,23 @@ public class MessageHandler {
      */
     public void retrieveMessageByMessageIdHandler(Context ctx){
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-        Message message = messageService.retrieveMessageById(message_id);
-        ctx.status(200).json(message);
+        Message message = messageService.retrieveMessageByMessageId(message_id);
+        if (message != null){
+            ctx.status(200).json(message);
+        } else {
+            ctx.status(200);
+        }
         
-        // try {
-        //     int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-        //     Message message = messageService.retrieveMessageById(message_id);
-            
-        //     if(message != null){
-        //         ctx.status(200).json(message);
-        //     } else {
-        //         ctx.status(400);
-        //     }
-        // } 
-        // catch(NumberFormatException e){
-        //     ctx.status(400);
-        // } catch (Exception e) {
-        //     ctx.status(500);
-        // }
-        
+    }
+
+    /**
+     * Handles requests to retrieve all messages by user ID.
+     * @param ctx The request context.
+     */
+    public void retrieveAllMessagesByUserIdHandler(Context ctx){
+        int account_id = Integer.parseInt(ctx.pathParam("account_id"));
+        List<Message> messages = messageService.retrieveAllMessagesByUserId(account_id);
+        ctx.json(messages);
     }
     
 }
