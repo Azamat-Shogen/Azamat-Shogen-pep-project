@@ -38,14 +38,40 @@ public class MessageHandler {
     }
 
 
- /**
- * Retrieves all messages and responds with a JSON list.
- * @param ctx The request context.
- */
-    public void getAllMessagesHandler(Context ctx){
+    /**
+     * Retrieves all messages and responds with a JSON list.
+     * @param ctx The request context.
+     */
+    public void retrieveAllMessagesHandler(Context ctx){
         List<Message> messages = messageService.retrieveAllMessages();
         ctx.status(200).json(messages);
     }
 
+    /**
+     * Retrieves a message by ID and responds with JSON.
+     * @param ctx The request context.
+     */
+    public void retrieveMessageByMessageIdHandler(Context ctx){
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.retrieveMessageById(message_id);
+        ctx.status(200).json(message);
+        
+        // try {
+        //     int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        //     Message message = messageService.retrieveMessageById(message_id);
+            
+        //     if(message != null){
+        //         ctx.status(200).json(message);
+        //     } else {
+        //         ctx.status(400);
+        //     }
+        // } 
+        // catch(NumberFormatException e){
+        //     ctx.status(400);
+        // } catch (Exception e) {
+        //     ctx.status(500);
+        // }
+        
+    }
     
 }
