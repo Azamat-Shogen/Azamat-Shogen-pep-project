@@ -1,5 +1,7 @@
 package Handlers;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,4 +36,16 @@ public class MessageHandler {
             ctx.status(400);
         }
     }
+
+
+ /**
+ * Retrieves all messages and responds with a JSON list.
+ * @param ctx The request context.
+ */
+    public void getAllMessagesHandler(Context ctx){
+        List<Message> messages = messageService.retrieveAllMessages();
+        ctx.status(200).json(messages);
+    }
+
+    
 }
