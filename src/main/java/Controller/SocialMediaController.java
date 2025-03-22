@@ -31,7 +31,6 @@ public class SocialMediaController {
          this.messageHandler = new MessageHandler(messageService);
     }
 
-
     public Javalin startAPI() {
 
         Javalin app = Javalin.create();
@@ -46,6 +45,7 @@ public class SocialMediaController {
         app.get("/accounts/{account_id}/messages", messageHandler::retrieveAllMessagesByUserIdHandler);
         app.delete("/messages/{message_id}", messageHandler::deleteMessageByMessageIdHandler);
         app.patch("/messages/{message_id}", messageHandler::updateMessageByMessageIdHandler);
+
         return app;
     }
 

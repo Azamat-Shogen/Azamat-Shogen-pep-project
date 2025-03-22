@@ -15,7 +15,7 @@ public class MessageValidations {
 
         if (message.getMessage_text().length() > 255) return false;
 
-        // Validate existing account_id
+        // Validate existing account
         try {
             String sql = "SELECT * FROM account WHERE account.account_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -38,6 +38,7 @@ public class MessageValidations {
         if (messageText == null || messageText.isBlank()) return false;
         if (messageText.length() > 255) return false;
 
+         // Validate existing message
         try {
             String sql = "SELECT * FROM message WHERE message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
