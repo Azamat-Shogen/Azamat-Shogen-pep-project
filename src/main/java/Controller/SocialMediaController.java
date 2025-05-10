@@ -8,15 +8,18 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 /**
- * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
- * found in readme.md as well as the test cases. You should
- * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
+ * Controller class for the Social Media API.
+ * Defines the API endpoints and associates them with their respective handlers.
+ * This controller handles user account creation, login, message posting, retrieval,
+ * deletion, and updating.
  */
 public class SocialMediaController {
     /**
-     * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
-     * suite must receive a Javalin object from this method.
-     * @return a Javalin app object which defines the behavior of the Javalin controller.
+     * Creates and configures a Javalin application instance, defining the API endpoints
+     * and mapping them to their corresponding handler methods. This method is crucial
+     * for the test suite to interact with the API.
+     *
+     * @return A configured Javalin application object.
      */
 
     private final AccountService accountService;
@@ -24,13 +27,23 @@ public class SocialMediaController {
     private final AccountHandler accountHandler;
     private final MessageHandler messageHandler;
 
+    /**
+     * Constructs a new SocialMediaController, initializing the service and handler
+     * dependencies.
+     */
     public SocialMediaController(){
-         this.accountService = new AccountService();
-         this.messageService = new MessageService();
-         this.accountHandler = new AccountHandler(accountService);
-         this.messageHandler = new MessageHandler(messageService);
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
+        this.accountHandler = new AccountHandler(accountService);
+        this.messageHandler = new MessageHandler(messageService);
     }
 
+    /**
+     * Configures the Javalin application by defining API endpoints and associating
+     * them with the appropriate handler methods.
+     *
+     * @return A configured Javalin application object with defined routes.
+     */
     public Javalin startAPI() {
 
         Javalin app = Javalin.create();
@@ -50,12 +63,13 @@ public class SocialMediaController {
     }
 
     /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * An example handler for the "/example-endpoint".
+     * Responds with a simple JSON string.
+     *
+     * @param context The Javalin Context object, providing access to the HTTP request
+     * and allowing control over the HTTP response.
      */
     private void exampleHandler(Context context) {
         context.json("sample text");
     }
-
-
 }
