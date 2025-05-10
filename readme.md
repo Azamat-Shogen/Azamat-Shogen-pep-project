@@ -113,7 +113,7 @@ Content-Type: application/json
 
 ## 👥 Contributors
 
-Azamat Shogen – [your-github-link](https://github.com/Azamat-Shogen)
+Azamat Shogen – [github](https://github.com/Azamat-Shogen)
 
 ## 📄 License
 
